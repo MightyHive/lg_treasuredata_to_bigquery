@@ -106,12 +106,15 @@ def get_sample_row_from_table(client, table):
 
 # Update schema with date column
 def update_schema_column_date_type(table_schema):
-	formats = ['%Y-%m-%d', '%Y-%m', '%Y-%m-%d %H:%M:%S']
+	formats = ['%Y-%m-%d', '%Y-%m-%d %H:%M:%S']
 	for column in table_schema:
 		for format in formats:
 			try:
 				if bool(datetime.strptime(str(column['sample_value']), format)):
-					column['type'] = 'DATE'
+					if format == '%Y-%m-%d %H:%M:%S':
+						column['type'] = 'DATETIME'
+					else:
+						column['type'] = 'DATE'
 			except ValueError:
 				error = ValueError
 
